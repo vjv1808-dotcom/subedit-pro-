@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#07111f" />
+  <title>SubEdit Pro</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root{--bg:#07111f;--card:#101c2c;--card2:#142338;--text:#f7fbff;--muted:#93a4b8;--blue:#168cff;--line:#263a51;--danger:#ff5364}
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#06101c,#0a1626);color:var(--text)}
+    .app{max-width:900px;margin:auto;min-height:100vh;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 28px)}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-size:25px;font-weight:800}.brand b{color:var(--blue)} .sub{color:var(--muted);font-size:12px;margin-top:3px}
+    .panel{background:rgba(16,28,44,.94);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 12px 30px #0004}
+    .row{display:flex;gap:10px;flex-wrap:wrap}.grow{flex:1;min-width:160px}
+    button,.filebtn{border:0;border-radius:12px;padding:12px 14px;background:var(--blue);color:white;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+    button.secondary,.filebtn.secondary{background:var(--card2);border:1px solid var(--line)} button.danger{background:#3a1820;color:#ff9ca7}
+    input[type=file]{display:none} input[type=text],input[type=number],textarea,select{width:100%;background:#081422;color:white;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit}
+    textarea{min-height:78px;resize:vertical}.hint{color:var(--muted);font-size:12px;line-height:1.45}.status{font-size:13px;color:#b8d9ff}
+    .toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.toolbar button{padding:10px 6px;font-size:12px}
+    .item{background:#0b1726;border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}.itemtop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.num{font-weight:800;color:#83c2ff}.times{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.actions button{padding:7px 9px;font-size:11px;background:#172a40}
+    .empty{text-align:center;padding:35px 12px;color:var(--muted)} .badge{font-size:11px;background:#16324f;padding:5px 8px;border-radius:999px;color:#9ed0ff}
+    h2{font-size:16px;margin:0 0 10px}.footer{text-align:center;color:var(--muted);font-size:11px;padding:8px}
+    @media(max-width:560px){.toolbar{grid-template-columns:repeat(2,1fr)}.times{grid-template-columns:1fr}.brand{font-size:22px}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header><div><div class="brand">🎬 SubEdit <b>Pro</b></div><div class="sub">Personal SRT Editor • V1</div></div><span class="badge" id="count">0 lines</span></header>
+
+  <section class="panel">
+    <h2>Import / Export</h2>
+    <div class="row">
+      <label class="filebtn grow">📄 Import SRT<input id="file" type="file" accept=".srt,text/plain"></label>
+      <button class="secondary grow" id="newBtn">＋ New subtitle</button>
+      <button class="grow" id="exportBtn">⬆️ Export SRT</button>
+    </div>
+    <div class="hint" style="margin-top:9px">Your subtitle stays in this browser. V1 works without an account or server.</div>
+  </section>
+
+  <section class="panel">
+    <h2>Global Timing Fix</h2>
+    <div class="toolbar">
+      <button class="secondary shift" data-ms="-500">−500 ms</button>
+      <button class="secondary shift" data-ms="-100">−100 ms</button>
+      <button class="secondary shift" data-ms="-50">−50 ms</button>
+      <button class="secondary shift" data-ms="50">+50 ms</button>
+      <button class="secondary shift" data-ms="100">+100 ms</button>
+      <button class="secondary shift" data-ms="500">+500 ms</button>
+    </div>
+    <div class="status" id="status" style="margin-top:10px">Import an SRT file to start.</div>
+  </section>
+
+  <section class="panel">
+    <div class="row" style="align-items:center"><h2 class="grow" style="margin:0">Edit Subtitles</h2><button class="secondary" id="checkBtn">✓ Check errors</button></div>
+    <div id="list"><div class="empty">No subtitles yet.<br>Tap <b>Import SRT</b> or <b>New subtitle</b>.</div></div>
+  </section>
+  <div class="footer">SubEdit Pro • Local SRT editing • AI translation can be added in V2</div>
+</div>
+
+<script>
+let subs = [];
+const $ = s => document.querySelector(s);
+const list = $("#list"), status = $("#status"), count = $("#count");
+
+function parseTime(t){
+  const m=t.trim().match(/(\d+):(\d+):(\d+)[,.](\d+)/); if(!m)return 0;
+  return +m[1]*3600000 + +m[2]*60000 + +m[3]*1000 + +m[4].padEnd(3,'0').slice(0,3);
+}
+function fmt(ms){
+  ms=Math.max(0,Math.round(ms)); const h=Math.floor(ms/3600000); ms%=3600000;
+  const m=Math.floor(ms/60000); ms%=60000; const s=Math.floor(ms/1000), x=ms%1000;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')},${String(x).padStart(3,'0')}`;
+}
+function parseSRT(text){
+  text=text.replace(/\r/g,'').trim();
+  if(!text)return [];
+  return text.split(/\n{2,}/).map(block=>{
+    const lines=block.split('\n'); let idx=0;
+    if(/^\d+$/.test(lines[0]?.trim())) idx=1;
+    const tm=lines[idx]?.match(/(.+?)\s*-->\s*(.+)/); if(!tm)return null;
+    return {start:parseTime(tm[1]),end:parseTime(tm[2]),text:lines.slice(idx+1).join('\n')};
+  }).filter(Boolean);
+}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){
+  count.textContent=`${subs.length} line${subs.length===1?'':'s'}`;
+  if(!subs.length){list.innerHTML='<div class="empty">No subtitles yet.<br>Tap <b>Import SRT</b> or <b>New subtitle</b>.</div>';return}
+  list.innerHTML=subs.map((s,i)=>`<div class="item" data-i="${i}">
+    <div class="itemtop"><span class="num">#${i+1}</span><button class="danger del">Delete</button></div>
+    <div class="times"><input class="start" value="${fmt(s.start)}"><input class="end" value="${fmt(s.end)}"></div>
+    <textarea class="txt">${esc(s.text)}</textarea>
+    <div class="actions"><button class="minus">−100 ms</button><button class="plus">+100 ms</button><button class="split">Split text</button><button class="merge">Merge next</button></div>
+  </div>`).join('');
+}
+list.addEventListener('input',e=>{
+  const box=e.target.closest('.item'); if(!box)return; const i=+box.dataset.i;
+  if(e.target.classList.contains('txt'))subs[i].text=e.target.value;
+  if(e.target.classList.contains('start'))subs[i].start=parseTime(e.target.value);
+  if(e.target.classList.contains('end'))subs[i].end=parseTime(e.target.value);
+});
+list.addEventListener('click',e=>{
+  const box=e.target.closest('.item'); if(!box)return; const i=+box.dataset.i;
+  if(e.target.classList.contains('del')) subs.splice(i,1);
+  else if(e.target.classList.contains('minus')){subs[i].start=Math.max(0,subs[i].start-100);subs[i].end=Math.max(0,subs[i].end-100)}
+  else if(e.target.classList.contains('plus')){subs[i].start+=100;subs[i].end+=100}
+  else if(e.target.classList.contains('merge') && i<subs.length-1){subs[i].text += '\n'+subs[i+1].text;subs[i].end=subs[i+1].end;subs.splice(i+1,1)}
+  else if(e.target.classList.contains('split')){
+    const s=subs[i], p=s.text.lastIndexOf(' ',Math.floor(s.text.length/2));
+    if(p>0){const mid=Math.floor((s.start+s.end)/2);subs.splice(i,1,{start:s.start,end:mid,text:s.text.slice(0,p).trim()},{start:mid+1,end:s.end,text:s.text.slice(p+1).trim()})}
+  }
+  render();
+});
+$("#file").addEventListener('change',async e=>{
+  const f=e.target.files[0]; if(!f)return; subs=parseSRT(await f.text()); render();
+  status.textContent=`Loaded ${subs.length} subtitle lines from ${f.name}.`;
+});
+$("#newBtn").onclick=()=>{const start=subs.length?subs.at(-1).end+1:0;subs.push({start,end:start+2000,text:''});render();status.textContent='New subtitle added.'};
+document.querySelectorAll('.shift').forEach(b=>b.onclick=()=>{const n=+b.dataset.ms;subs.forEach(s=>{s.start=Math.max(0,s.start+n);s.end=Math.max(0,s.end+n)});render();status.textContent=`Shifted all subtitles ${n>0?'+':''}${n} ms.`});
+$("#checkBtn").onclick=()=>{
+  let issues=[]; subs.forEach((s,i)=>{if(!s.text.trim())issues.push(`#${i+1} empty text`);if(s.end<=s.start)issues.push(`#${i+1} invalid timing`);if(i&&s.start<subs[i-1].end)issues.push(`#${i+1} overlaps previous`)});
+  status.textContent=issues.length?`${issues.length} issue(s): ${issues.slice(0,4).join(' • ')}${issues.length>4?' …':''}`:'No basic timing/empty-line errors found.';
+};
+$("#exportBtn").onclick=()=>{
+  if(!subs.length){status.textContent='Nothing to export yet.';return}
+  const out=subs.map((s,i)=>`${i+1}\n${fmt(s.start)} --> ${fmt(s.end)}\n${s.text.trim()}`).join('\n\n')+'\n';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([out],{type:'application/x-subrip;charset=utf-8'}));a.download='subedit_export.srt';a.click();URL.revokeObjectURL(a.href);
+  status.textContent='SRT exported.';
+};
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+</script>
+</body>
+</html>
