@@ -1,4 +1,4 @@
-# SubEdit Pro V2.1
+# SubEdit Pro V2.2
 
 A local-first SRT editor for mobile browsers.
 
@@ -12,7 +12,7 @@ Features:
 - Basic overlap / empty text / invalid timing check
 - Export a clean .srt
 - Join Part 1, Part 2, and more into one continuous SRT
-- Split one full SRT into 2–10 equal, timestamp-preserving SRT files
+- Split one full SRT into 2–10 SRT or TXT files while preserving timestamps and continuous numbering across parts
 - Merge multiple SRT tracks by timestamp
 - Translate English SRT to natural spoken Tamil with Gemini
 - Search Tamil/English subtitle listings with OpenSubtitles
