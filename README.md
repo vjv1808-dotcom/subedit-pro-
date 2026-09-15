@@ -1,4 +1,4 @@
-# SubEdit Pro V2.2
+# SubEdit Pro V2.3
 
 A local-first SRT editor for mobile browsers.
 
