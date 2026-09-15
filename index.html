@@ -1,134 +1,37 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#07111f" />
-  <title>SubEdit Pro</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <style>
-    :root{--bg:#07111f;--card:#101c2c;--card2:#142338;--text:#f7fbff;--muted:#93a4b8;--blue:#168cff;--line:#263a51;--danger:#ff5364}
-    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#06101c,#0a1626);color:var(--text)}
-    .app{max-width:900px;margin:auto;min-height:100vh;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 28px)}
-    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.brand{font-size:25px;font-weight:800}.brand b{color:var(--blue)} .sub{color:var(--muted);font-size:12px;margin-top:3px}
-    .panel{background:rgba(16,28,44,.94);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 12px 30px #0004}
-    .row{display:flex;gap:10px;flex-wrap:wrap}.grow{flex:1;min-width:160px}
-    button,.filebtn{border:0;border-radius:12px;padding:12px 14px;background:var(--blue);color:white;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}
-    button.secondary,.filebtn.secondary{background:var(--card2);border:1px solid var(--line)} button.danger{background:#3a1820;color:#ff9ca7}
-    input[type=file]{display:none} input[type=text],input[type=number],textarea,select{width:100%;background:#081422;color:white;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit}
-    textarea{min-height:78px;resize:vertical}.hint{color:var(--muted);font-size:12px;line-height:1.45}.status{font-size:13px;color:#b8d9ff}
-    .toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.toolbar button{padding:10px 6px;font-size:12px}
-    .item{background:#0b1726;border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}.itemtop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.num{font-weight:800;color:#83c2ff}.times{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.actions button{padding:7px 9px;font-size:11px;background:#172a40}
-    .empty{text-align:center;padding:35px 12px;color:var(--muted)} .badge{font-size:11px;background:#16324f;padding:5px 8px;border-radius:999px;color:#9ed0ff}
-    h2{font-size:16px;margin:0 0 10px}.footer{text-align:center;color:var(--muted);font-size:11px;padding:8px}
-    @media(max-width:560px){.toolbar{grid-template-columns:repeat(2,1fr)}.times{grid-template-columns:1fr}.brand{font-size:22px}}
-  </style>
-</head>
-<body>
-<div class="app">
-  <header><div><div class="brand">🎬 SubEdit <b>Pro</b></div><div class="sub">Personal SRT Editor • V1</div></div><span class="badge" id="count">0 lines</span></header>
-
-  <section class="panel">
-    <h2>Import / Export</h2>
-    <div class="row">
-      <label class="filebtn grow">📄 Import SRT<input id="file" type="file" accept=".srt,text/plain"></label>
-      <button class="secondary grow" id="newBtn">＋ New subtitle</button>
-      <button class="grow" id="exportBtn">⬆️ Export SRT</button>
-    </div>
-    <div class="hint" style="margin-top:9px">Your subtitle stays in this browser. V1 works without an account or server.</div>
-  </section>
-
-  <section class="panel">
-    <h2>Global Timing Fix</h2>
-    <div class="toolbar">
-      <button class="secondary shift" data-ms="-500">−500 ms</button>
-      <button class="secondary shift" data-ms="-100">−100 ms</button>
-      <button class="secondary shift" data-ms="-50">−50 ms</button>
-      <button class="secondary shift" data-ms="50">+50 ms</button>
-      <button class="secondary shift" data-ms="100">+100 ms</button>
-      <button class="secondary shift" data-ms="500">+500 ms</button>
-    </div>
-    <div class="status" id="status" style="margin-top:10px">Import an SRT file to start.</div>
-  </section>
-
-  <section class="panel">
-    <div class="row" style="align-items:center"><h2 class="grow" style="margin:0">Edit Subtitles</h2><button class="secondary" id="checkBtn">✓ Check errors</button></div>
-    <div id="list"><div class="empty">No subtitles yet.<br>Tap <b>Import SRT</b> or <b>New subtitle</b>.</div></div>
-  </section>
-  <div class="footer">SubEdit Pro • Local SRT editing • AI translation can be added in V2</div>
-</div>
-
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07111f"><title>SubEdit Pro V2</title><link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#07111f;--card:#101c2c;--card2:#142338;--text:#f7fbff;--muted:#93a4b8;--blue:#168cff;--purple:#8b5cf6;--green:#18a999;--line:#263a51;--danger:#ff5364}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#06101c,#0a1626);color:var(--text)}.app{max-width:900px;margin:auto;min-height:100vh;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(env(safe-area-inset-bottom) + 28px)}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.brand{font-size:25px;font-weight:800}.brand b{color:var(--blue)}.sub{color:var(--muted);font-size:12px;margin-top:3px}.panel{background:rgba(16,28,44,.94);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:14px;box-shadow:0 12px 30px #0004}.row{display:flex;gap:10px;flex-wrap:wrap}.grow{flex:1;min-width:140px}button,.filebtn{border:0;border-radius:12px;padding:12px 14px;background:var(--blue);color:white;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px}button.secondary,.filebtn.secondary{background:var(--card2);border:1px solid var(--line)}button.purple{background:var(--purple)}button.green{background:var(--green)}button.danger{background:#3a1820;color:#ff9ca7}button:disabled{opacity:.45}input[type=file]{display:none}input[type=text],input[type=number],input[type=password],textarea{width:100%;background:#081422;color:white;border:1px solid var(--line);border-radius:10px;padding:11px;font:inherit}textarea{min-height:78px;resize:vertical}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:14px;position:sticky;top:0;z-index:4;background:#07111ff0;padding:6px 0}.nav button{font-size:12px;padding:10px 4px;background:var(--card2);border:1px solid var(--line)}.nav button.active{background:var(--blue);border-color:var(--blue)}.view{display:none}.view.active{display:block}.hint{color:var(--muted);font-size:12px;line-height:1.5}.status{font-size:13px;color:#b8d9ff;line-height:1.45}.toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.toolbar button{padding:10px 6px;font-size:12px}.item{background:#0b1726;border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}.itemtop{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.num{font-weight:800;color:#83c2ff}.times{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.actions button{padding:7px 9px;font-size:11px;background:#172a40}.empty{text-align:center;padding:35px 12px;color:var(--muted)}.badge{font-size:11px;background:#16324f;padding:5px 8px;border-radius:999px;color:#9ed0ff}h2{font-size:16px;margin:0 0 10px}.footer{text-align:center;color:var(--muted);font-size:11px;padding:8px}.label{display:block;color:#cbd5e1;font-size:12px;font-weight:700;margin:10px 0 6px}.notice{padding:12px;border-radius:12px;background:#201b3b;border:1px solid #51438d;color:#d8d2ff;font-size:12px;line-height:1.5}.filelist{margin:10px 0;color:#b8d9ff;font-size:12px;line-height:1.7}.result{padding:10px 0;border-bottom:1px solid var(--line)}.result b{display:block;font-size:13px}.result span{color:var(--muted);font-size:11px}video{width:100%;max-height:480px;background:#000;border-radius:14px;margin-top:10px}@media(max-width:640px){.nav .navtext{display:none}.toolbar{grid-template-columns:repeat(2,1fr)}.times{grid-template-columns:1fr}.brand{font-size:22px}}
+</style></head><body><div class="app">
+<header><div><div class="brand">🎬 SubEdit <b>Pro</b></div><div class="sub">Personal Subtitle Studio • V2</div></div><span class="badge" id="count">0 lines</span></header>
+<nav class="nav"><button class="active" data-view="editor">✏️ <span class="navtext">Editor</span></button><button data-view="join">⛓ <span class="navtext">Join</span></button><button data-view="translate">அ <span class="navtext">Tamil</span></button><button data-view="search">⌕ <span class="navtext">Search</span></button><button data-view="video">▶ <span class="navtext">Video</span></button></nav>
+<main id="editor" class="view active">
+<section class="panel"><h2>Import / Export</h2><div class="row"><label class="filebtn grow">📄 Import SRT<input id="file" type="file" accept=".srt,text/plain"></label><button class="secondary grow" id="newBtn">＋ New subtitle</button><button class="grow" id="exportBtn">⬆️ Export SRT</button></div><div class="hint" style="margin-top:9px">Your subtitle stays in this browser.</div></section>
+<section class="panel"><h2>Global Timing Fix</h2><div class="toolbar"><button class="secondary shift" data-ms="-500">−500 ms</button><button class="secondary shift" data-ms="-100">−100 ms</button><button class="secondary shift" data-ms="-50">−50 ms</button><button class="secondary shift" data-ms="50">+50 ms</button><button class="secondary shift" data-ms="100">+100 ms</button><button class="secondary shift" data-ms="500">+500 ms</button></div><div class="status globalStatus" style="margin-top:10px">Import an SRT file to start.</div></section>
+<section class="panel"><div class="row" style="align-items:center"><h2 class="grow" style="margin:0">Edit Subtitles</h2><button class="secondary" id="checkBtn">✓ Check errors</button></div><div id="list"><div class="empty">No subtitles yet.<br>Tap <b>Import SRT</b> or <b>New subtitle</b>.</div></div></section></main>
+<main id="join" class="view"><section class="panel"><h2>Join Part Subtitles</h2><div class="notice">Choose Part 1, Part 2, Part 3 in the correct order. Join Parts makes one continuous timeline. Merge by Time keeps existing timestamps and sorts all lines.</div><label class="filebtn" style="margin-top:12px">📚 Choose SRT Parts<input id="partsFile" type="file" multiple accept=".srt,text/plain"></label><div id="partsList" class="filelist">No files selected.</div><label class="label">Gap between parts (seconds)</label><input id="partGap" type="number" value="1" step="0.1"><div class="row" style="margin-top:12px"><button class="green grow" id="joinBtn">⛓ Join Parts</button><button class="secondary grow" id="mergeBtn">≋ Merge by Time</button></div><div class="status" id="joinStatus" style="margin-top:10px"></div></section></main>
+<main id="translate" class="view"><section class="panel"><h2>English → Natural Tamil</h2><div class="notice">Tamil-dubbed movie style: natural spoken Tamil, complete meaning, character tone, emotion, clues and timestamps preserved. Current editor subtitle will be translated.</div><label class="label">Gemini API key</label><input id="geminiKey" type="password" placeholder="Paste your Gemini API key"><label class="label">Gemini model</label><input id="geminiModel" type="text" value="gemini-2.5-flash"><button class="purple" id="translateBtn" style="width:100%;margin-top:12px">அ Translate Current SRT</button><div class="status" id="translateStatus" style="margin-top:10px">Import an English SRT in Editor first.</div></section></main>
+<main id="search" class="view"><section class="panel"><h2>Movie Subtitle Search</h2><label class="label">Movie name and year</label><input id="movieQuery" type="text" placeholder="Example: Edge of Tomorrow 2014"><label class="label">OpenSubtitles API key</label><input id="openSubsKey" type="password" placeholder="Paste your OpenSubtitles API key"><button id="searchBtn" style="width:100%;margin-top:12px">⌕ Search Tamil / English</button><div class="status" id="searchStatus" style="margin-top:10px"></div><div id="searchResults"></div></section></main>
+<main id="video" class="view"><section class="panel"><h2>Video + Subtitle Preview</h2><div class="notice">Your video never uploads. Choose a video, then the SRT currently open in Editor appears during playback. Fix timing in Editor and return here to preview again.</div><label class="filebtn" style="margin-top:12px">🎞 Choose Video<input id="videoFile" type="file" accept="video/*,.mkv"></label><video id="player" controls playsinline></video><div class="status" id="videoStatus" style="margin-top:10px">Import an SRT in Editor, then choose a video.</div></section></main>
+<div class="footer">SubEdit Pro V2 • Local-first subtitle tools</div></div>
 <script>
-let subs = [];
-const $ = s => document.querySelector(s);
-const list = $("#list"), status = $("#status"), count = $("#count");
-
-function parseTime(t){
-  const m=t.trim().match(/(\d+):(\d+):(\d+)[,.](\d+)/); if(!m)return 0;
-  return +m[1]*3600000 + +m[2]*60000 + +m[3]*1000 + +m[4].padEnd(3,'0').slice(0,3);
-}
-function fmt(ms){
-  ms=Math.max(0,Math.round(ms)); const h=Math.floor(ms/3600000); ms%=3600000;
-  const m=Math.floor(ms/60000); ms%=60000; const s=Math.floor(ms/1000), x=ms%1000;
-  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')},${String(x).padStart(3,'0')}`;
-}
-function parseSRT(text){
-  text=text.replace(/\r/g,'').trim();
-  if(!text)return [];
-  return text.split(/\n{2,}/).map(block=>{
-    const lines=block.split('\n'); let idx=0;
-    if(/^\d+$/.test(lines[0]?.trim())) idx=1;
-    const tm=lines[idx]?.match(/(.+?)\s*-->\s*(.+)/); if(!tm)return null;
-    return {start:parseTime(tm[1]),end:parseTime(tm[2]),text:lines.slice(idx+1).join('\n')};
-  }).filter(Boolean);
-}
-function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function render(){
-  count.textContent=`${subs.length} line${subs.length===1?'':'s'}`;
-  if(!subs.length){list.innerHTML='<div class="empty">No subtitles yet.<br>Tap <b>Import SRT</b> or <b>New subtitle</b>.</div>';return}
-  list.innerHTML=subs.map((s,i)=>`<div class="item" data-i="${i}">
-    <div class="itemtop"><span class="num">#${i+1}</span><button class="danger del">Delete</button></div>
-    <div class="times"><input class="start" value="${fmt(s.start)}"><input class="end" value="${fmt(s.end)}"></div>
-    <textarea class="txt">${esc(s.text)}</textarea>
-    <div class="actions"><button class="minus">−100 ms</button><button class="plus">+100 ms</button><button class="split">Split text</button><button class="merge">Merge next</button></div>
-  </div>`).join('');
-}
-list.addEventListener('input',e=>{
-  const box=e.target.closest('.item'); if(!box)return; const i=+box.dataset.i;
-  if(e.target.classList.contains('txt'))subs[i].text=e.target.value;
-  if(e.target.classList.contains('start'))subs[i].start=parseTime(e.target.value);
-  if(e.target.classList.contains('end'))subs[i].end=parseTime(e.target.value);
-});
-list.addEventListener('click',e=>{
-  const box=e.target.closest('.item'); if(!box)return; const i=+box.dataset.i;
-  if(e.target.classList.contains('del')) subs.splice(i,1);
-  else if(e.target.classList.contains('minus')){subs[i].start=Math.max(0,subs[i].start-100);subs[i].end=Math.max(0,subs[i].end-100)}
-  else if(e.target.classList.contains('plus')){subs[i].start+=100;subs[i].end+=100}
-  else if(e.target.classList.contains('merge') && i<subs.length-1){subs[i].text += '\n'+subs[i+1].text;subs[i].end=subs[i+1].end;subs.splice(i+1,1)}
-  else if(e.target.classList.contains('split')){
-    const s=subs[i], p=s.text.lastIndexOf(' ',Math.floor(s.text.length/2));
-    if(p>0){const mid=Math.floor((s.start+s.end)/2);subs.splice(i,1,{start:s.start,end:mid,text:s.text.slice(0,p).trim()},{start:mid+1,end:s.end,text:s.text.slice(p+1).trim()})}
-  }
-  render();
-});
-$("#file").addEventListener('change',async e=>{
-  const f=e.target.files[0]; if(!f)return; subs=parseSRT(await f.text()); render();
-  status.textContent=`Loaded ${subs.length} subtitle lines from ${f.name}.`;
-});
-$("#newBtn").onclick=()=>{const start=subs.length?subs.at(-1).end+1:0;subs.push({start,end:start+2000,text:''});render();status.textContent='New subtitle added.'};
-document.querySelectorAll('.shift').forEach(b=>b.onclick=()=>{const n=+b.dataset.ms;subs.forEach(s=>{s.start=Math.max(0,s.start+n);s.end=Math.max(0,s.end+n)});render();status.textContent=`Shifted all subtitles ${n>0?'+':''}${n} ms.`});
-$("#checkBtn").onclick=()=>{
-  let issues=[]; subs.forEach((s,i)=>{if(!s.text.trim())issues.push(`#${i+1} empty text`);if(s.end<=s.start)issues.push(`#${i+1} invalid timing`);if(i&&s.start<subs[i-1].end)issues.push(`#${i+1} overlaps previous`)});
-  status.textContent=issues.length?`${issues.length} issue(s): ${issues.slice(0,4).join(' • ')}${issues.length>4?' …':''}`:'No basic timing/empty-line errors found.';
-};
-$("#exportBtn").onclick=()=>{
-  if(!subs.length){status.textContent='Nothing to export yet.';return}
-  const out=subs.map((s,i)=>`${i+1}\n${fmt(s.start)} --> ${fmt(s.end)}\n${s.text.trim()}`).join('\n\n')+'\n';
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([out],{type:'application/x-subrip;charset=utf-8'}));a.download='subedit_export.srt';a.click();URL.revokeObjectURL(a.href);
-  status.textContent='SRT exported.';
-};
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
-render();
-</script>
-</body>
-</html>
+let subs=[],partFiles=[],videoUrl=null,trackUrl=null;const $=s=>document.querySelector(s),list=$("#list"),count=$("#count");function setStatus(text){document.querySelectorAll('.globalStatus').forEach(el=>el.textContent=text)}
+function parseTime(t){const m=t.trim().match(/(\d+):(\d+):(\d+)[,.](\d+)/);if(!m)return 0;return +m[1]*3600000 + +m[2]*60000 + +m[3]*1000 + +m[4].padEnd(3,'0').slice(0,3)}
+function fmt(ms,dot=false){ms=Math.max(0,Math.round(ms));const h=Math.floor(ms/3600000);ms%=3600000;const m=Math.floor(ms/60000);ms%=60000;const s=Math.floor(ms/1000),x=ms%1000;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}${dot?'.':','}${String(x).padStart(3,'0')}`}
+function parseSRT(text){text=text.replace(/^\uFEFF/,'').replace(/\r/g,'').trim();if(!text)return[];return text.split(/\n{2,}/).map(block=>{const lines=block.split('\n');let idx=/^\d+$/.test(lines[0]?.trim())?1:0;const tm=lines[idx]?.match(/(.+?)\s*-->\s*(.+)/);if(!tm)return null;return{start:parseTime(tm[1]),end:parseTime(tm[2]),text:lines.slice(idx+1).join('\n')}}).filter(Boolean)}
+function makeSRT(items=subs){return items.map((s,i)=>`${i+1}\n${fmt(s.start)} --> ${fmt(s.end)}\n${s.text.trim()}`).join('\n\n')+'\n'}function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function render(){count.textContent=`${subs.length} line${subs.length===1?'':'s'}`;if(!subs.length){list.innerHTML='<div class="empty">No subtitles yet.<br>Tap <b>Import SRT</b> or <b>New subtitle</b>.</div>';return}list.innerHTML=subs.map((s,i)=>`<div class="item" data-i="${i}"><div class="itemtop"><span class="num">#${i+1}</span><button class="danger del">Delete</button></div><div class="times"><input class="start" value="${fmt(s.start)}"><input class="end" value="${fmt(s.end)}"></div><textarea class="txt">${esc(s.text)}</textarea><div class="actions"><button class="minus">−100 ms</button><button class="plus">+100 ms</button><button class="split">Split text</button><button class="merge">Merge next</button></div></div>`).join('')}
+function downloadSRT(items,name){if(!items.length)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([makeSRT(items)],{type:'application/x-subrip;charset=utf-8'}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+document.querySelectorAll('.nav button').forEach(btn=>btn.onclick=()=>{document.querySelectorAll('.nav button,.view').forEach(el=>el.classList.remove('active'));btn.classList.add('active');$(`#${btn.dataset.view}`).classList.add('active')});
+list.addEventListener('input',e=>{const box=e.target.closest('.item');if(!box)return;const i=+box.dataset.i;if(e.target.classList.contains('txt'))subs[i].text=e.target.value;if(e.target.classList.contains('start'))subs[i].start=parseTime(e.target.value);if(e.target.classList.contains('end'))subs[i].end=parseTime(e.target.value)});
+list.addEventListener('click',e=>{const box=e.target.closest('.item');if(!box)return;const i=+box.dataset.i;if(e.target.classList.contains('del'))subs.splice(i,1);else if(e.target.classList.contains('minus')){subs[i].start=Math.max(0,subs[i].start-100);subs[i].end=Math.max(0,subs[i].end-100)}else if(e.target.classList.contains('plus')){subs[i].start+=100;subs[i].end+=100}else if(e.target.classList.contains('merge')&&i<subs.length-1){subs[i].text+='\n'+subs[i+1].text;subs[i].end=subs[i+1].end;subs.splice(i+1,1)}else if(e.target.classList.contains('split')){const s=subs[i],p=s.text.lastIndexOf(' ',Math.floor(s.text.length/2));if(p>0){const mid=Math.floor((s.start+s.end)/2);subs.splice(i,1,{start:s.start,end:mid,text:s.text.slice(0,p).trim()},{start:mid+1,end:s.end,text:s.text.slice(p+1).trim()})}}render()});
+$('#file').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;subs=parseSRT(await f.text());render();setStatus(`Loaded ${subs.length} subtitle lines from ${f.name}.`)});$('#newBtn').onclick=()=>{const start=subs.length?subs.at(-1).end+1:0;subs.push({start,end:start+2000,text:''});render();setStatus('New subtitle added.')};document.querySelectorAll('.shift').forEach(b=>b.onclick=()=>{const n=+b.dataset.ms;subs.forEach(s=>{s.start=Math.max(0,s.start+n);s.end=Math.max(0,s.end+n)});render();setStatus(`Shifted all subtitles ${n>0?'+':''}${n} ms.`)});
+$('#checkBtn').onclick=()=>{let issues=[];subs.forEach((s,i)=>{if(!s.text.trim())issues.push(`#${i+1} empty text`);if(s.end<=s.start)issues.push(`#${i+1} invalid timing`);if(i&&s.start<subs[i-1].end)issues.push(`#${i+1} overlaps previous`)});setStatus(issues.length?`${issues.length} issue(s): ${issues.slice(0,4).join(' • ')}${issues.length>4?' …':''}`:'No basic timing/empty-line errors found.')};$('#exportBtn').onclick=()=>{if(!subs.length){setStatus('Nothing to export yet.');return}downloadSRT(subs,'Tamil_Subtitle.srt');setStatus('SRT exported.')};
+$('#partsFile').addEventListener('change',async e=>{partFiles=await Promise.all([...e.target.files].map(async f=>({name:f.name,subs:parseSRT(await f.text())})));$('#partsList').innerHTML=partFiles.map((f,i)=>`${i+1}. ${esc(f.name)} — ${f.subs.length} lines`).join('<br>')||'No files selected.'});
+$('#joinBtn').onclick=()=>{if(partFiles.length<2){$('#joinStatus').textContent='Choose at least two SRT files.';return}let out=[],cursor=0,gap=(+$('#partGap').value||0)*1000;partFiles.forEach((file,i)=>{if(!file.subs.length)return;const offset=i?cursor+gap-file.subs[0].start:0;file.subs.forEach(s=>out.push({...s,start:s.start+offset,end:s.end+offset}));cursor=out.at(-1).end});downloadSRT(out,'Joined_Subtitle.srt');$('#joinStatus').textContent=`Joined ${partFiles.length} parts into ${out.length} lines.`};$('#mergeBtn').onclick=()=>{if(partFiles.length<2){$('#joinStatus').textContent='Choose at least two SRT files.';return}const out=partFiles.flatMap(f=>f.subs).sort((a,b)=>a.start-b.start||a.end-b.end);downloadSRT(out,'Merged_Subtitle.srt');$('#joinStatus').textContent=`Merged ${out.length} lines by timestamp.`};
+$('#geminiKey').value=localStorage.geminiKey||'';$('#geminiModel').value=localStorage.geminiModel||'gemini-2.5-flash';
+$('#translateBtn').onclick=async()=>{const key=$('#geminiKey').value.trim(),model=$('#geminiModel').value.trim(),btn=$('#translateBtn'),st=$('#translateStatus');if(!subs.length){st.textContent='Import an English SRT in Editor first.';return}if(!key){st.textContent='Add your Gemini API key.';return}localStorage.geminiKey=key;localStorage.geminiModel=model;btn.disabled=true;try{const source=subs.map(s=>({...s})),batchSize=60;for(let i=0;i<source.length;i+=batchSize){const batch=source.slice(i,i+batchSize),numbered=batch.map((s,j)=>`${i+j+1}\n${fmt(s.start)} --> ${fmt(s.end)}\n${s.text}`).join('\n\n');st.textContent=`Translating ${i+1}–${Math.min(i+batch.length,source.length)} of ${source.length}…`;const prompt=`Translate this English SRT into natural spoken Tamil that feels like a professionally Tamil-dubbed movie. Avoid formal, bookish, literal or Google-Translate-style Tamil. Preserve complete meaning, character personality, emotion, humour, clues, suspense and profanity intensity without spoilers. Preserve every subtitle number, order and timestamp exactly. Omit nothing. Keep each subtitle concise, normally no more than 2 lines. Return only valid SRT, no markdown.\n\n${numbered}`;const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:.35}})});if(!res.ok)throw new Error(`Gemini error ${res.status}: ${await res.text()}`);const data=await res.json(),raw=(data?.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('').replace(/^```(?:srt)?\s*/i,'').replace(/```\s*$/,'').trim(),translated=parseSRT(raw);if(translated.length!==batch.length)throw new Error(`Line count changed in batch ${Math.floor(i/batchSize)+1}`);translated.forEach((t,j)=>subs[i+j]={...source[i+j],text:t.text})}render();downloadSRT(subs,'Tamil_Subtitle.srt');st.textContent=`Done. ${subs.length} Tamil subtitles translated and exported.`}catch(err){st.textContent=`Translation stopped: ${err.message}`}finally{btn.disabled=false}};
+$('#openSubsKey').value=localStorage.openSubsKey||'';$('#searchBtn').onclick=async()=>{const q=$('#movieQuery').value.trim(),key=$('#openSubsKey').value.trim(),st=$('#searchStatus'),box=$('#searchResults');if(!q||!key){st.textContent='Enter movie name and OpenSubtitles API key.';return}localStorage.openSubsKey=key;st.textContent='Searching…';box.innerHTML='';try{const res=await fetch(`https://api.opensubtitles.com/api/v1/subtitles?languages=ta,en&query=${encodeURIComponent(q)}`,{headers:{'Api-Key':key,'User-Agent':'SubEdit Pro V2'}});if(!res.ok)throw new Error(`OpenSubtitles error ${res.status}`);const data=await res.json(),items=(data.data||[]).slice(0,20);box.innerHTML=items.map(x=>{const a=x.attributes||{},f=a.files?.[0]||{};return `<div class="result"><b>${esc(f.file_name||a.release||'Subtitle')}</b><span>${esc((a.language||'').toUpperCase())} · ${a.download_count||0} downloads</span></div>`}).join('')||'<div class="empty">No results found.</div>';st.textContent=`Found ${items.length} results. Downloading requires an OpenSubtitles account login.`}catch(err){st.textContent=`Search failed: ${err.message}`}};
+function loadTrack(){const player=$('#player');player.querySelectorAll('track').forEach(t=>t.remove());if(trackUrl)URL.revokeObjectURL(trackUrl);if(!subs.length)return;const vtt='WEBVTT\n\n'+subs.map((s,i)=>`${i+1}\n${fmt(s.start,true)} --> ${fmt(s.end,true)}\n${s.text}`).join('\n\n');trackUrl=URL.createObjectURL(new Blob([vtt],{type:'text/vtt'}));const track=document.createElement('track');track.kind='subtitles';track.label='Current SRT';track.srclang='ta';track.src=trackUrl;track.default=true;player.appendChild(track)}
+$('#videoFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(videoUrl)URL.revokeObjectURL(videoUrl);videoUrl=URL.createObjectURL(f);$('#player').src=videoUrl;loadTrack();$('#videoStatus').textContent=subs.length?`Playing ${f.name} with ${subs.length} subtitle lines.`:'Video loaded. Import an SRT in Editor to add subtitles.'});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});render();
+</script></body></html>
